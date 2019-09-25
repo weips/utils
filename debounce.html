@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+      #con {
+        width: 80%;
+        margin: 0 auto;
+        height: 400px;
+        line-height: 400px;
+        text-align: center;
+        background: #ccc;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="con"></div>
+    <button id="btn">+</button>
+    <script>
+      /**
+       * 防抖 - 默认情况下，函数立即执行
+       */
+      function debounce(func, ms = 500, immediate = true) {
+        let timer = null;
+        return function(...arg) {
+          console.log('1', timer);
+          clearTimeout(timer);
+          console.log('2', timer);
+          if (immediate && !timer) {
+            timer = setTimeout(() => {
+              timer = null;
+            }, ms);
+            func.apply(this, arg);
+          } else {
+            timer = setTimeout(() => {
+              func.apply(this, arg);
+              timer = null;
+            }, ms);
+          }
+        };
+      }
+
+      function debounce1(func, ms = 500, immediate = true) {
+        let timer = null;
+        return function(...arg) {
+          timer && clearTimeout(timer);
+          if (immediate) {
+            const callNow = !timer;
+            timer = setTimeout(() => {
+              timer = null;
+            }, ms);
+            if (callNow) func.apply(this, arg);
+          } else {
+            timer = setTimeout(() => {
+              func.apply(this, arg);
+            }, ms);
+          }
+        };
+      }
+
+      const conDom = document.getElementById('con');
+      const btnDom = document.getElementById('btn');
+      let num = 1;
+      function move(e) {
+        console.log(e);
+        conDom.innerHTML = num++;
+      }
+      btnDom.onclick = debounce1(move, 1000, true);
+    </script>
+  </body>
+</html>
